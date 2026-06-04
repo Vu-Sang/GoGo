@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHÓM 5 - HCM202 - IA1801</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS VARIABLES & RESET
+    ============================================= */
+    :root {
+      --crimson:    #8B0000;
+      --crimson-lt: #A52020;
+      --gold:       #C8960C;
+      --gold-lt:    #FFD700;
+      --cream:      #FDF6EC;
+      --parchment:  #F5ECD7;
+      --dark:       #1A0A00;
+      --text:       #2C1A0E;
+      --text-muted: #7A5C3A;
+      --white:      #FFFFFF;
+      --section-pad: 90px 0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    [data-aos] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .55s ease, transform .55s ease;
+      transition-delay: var(--aos-delay, 0ms);
+      will-change: opacity, transform;
+    }
+    [data-aos].aos-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       SCROLLBAR
+    ============================================= */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--parchment); }
+    ::-webkit-scrollbar-thumb { background: var(--crimson); border-radius: 3px; }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: rgba(139,0,0,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--gold);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      transition: box-shadow .3s;
+    }
+    #navbar.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,.35); }
+
+    .nav-brand {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      color: var(--gold-lt);
+      font-size: 1.1rem;
+      letter-spacing: 1.8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      color: #fff;
+      text-decoration: none;
+      padding: 6px 18px;
+      border-radius: 4px;
+      font-size: .88rem;
+      font-weight: 500;
+      letter-spacing: .5px;
+      transition: background .25s, color .25s;
+      border: 1px solid transparent;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: var(--gold);
+      color: var(--dark);
+      border-color: var(--gold-lt);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px; height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: .3s;
+    }
+
+    /* =============================================
+       QUICK-NAV ARROWS
+    ============================================= */
+    #quick-nav {
+      position: fixed;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .qn-btn {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--crimson);
+      border: 2px solid var(--gold);
+      color: var(--gold-lt);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, transform .2s;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .qn-btn:hover { background: var(--gold); color: var(--dark); transform: scale(1.12); }
+    .qn-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,215,0,.35);
+      border: 2px solid var(--gold);
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .qn-dot.active { background: var(--gold-lt); }
+
+    /* =============================================
+       SECTION BASE
+    ============================================= */
+    section {
+      padding: var(--section-pad);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    section:not(#home) {
+      content-visibility: auto;
+      contain-intrinsic-size: 1000px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--crimson);
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 70px; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+    .section-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .95rem;
+      margin-bottom: 50px;
+      font-style: italic;
+    }
+
+    /* =============================================
+       #home — HERO
+    ============================================= */
+    #home {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #0D0000;
+    }
+
+    /* Textured gradient background */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(139,0,0,.7) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(200,150,12,.25) 0%, transparent 55%),
+        linear-gradient(160deg, #1a0000 0%, #3d0000 50%, #1a0800 100%);
+      z-index: 0;
+    }
+
+    /* Star / noise overlay */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 15%, rgba(255,215,0,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 40%, rgba(255,215,0,.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 50% 80%, rgba(255,215,0,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 65%, rgba(255,255,255,.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,.15) 0%, transparent 100%);
+    }
+
+    /* Decorative circle ring */
+    .hero-ring {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,150,12,.15);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      animation: ringPulse 6s ease-in-out infinite;
+    }
+    .hero-ring:nth-child(3) {
+      width: 800px; height: 800px;
+      border-color: rgba(200,150,12,.08);
+      animation-delay: 2s;
+    }
+    @keyframes ringPulse {
+      0%,100% { opacity: .5; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1; transform: translate(-50%,-50%) scale(1.03); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 24px;
+      transform: translateY(-18px);
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(200,150,12,.2), rgba(200,150,12,.05));
+      border: 1px solid var(--gold);
+      color: var(--gold-lt);
+      font-size: .78rem;
+      letter-spacing: 3px;
+      padding: 6px 20px;
+      border-radius: 30px;
+      margin-bottom: 28px;
+      animation: fadeInDown .8s ease both;
+      order: 1;
+    }
+
+    .hero-group {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.35rem, 6vw, 4.7rem);
+      color: var(--gold-lt);
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      text-shadow: 0 0 40px rgba(200,150,12,.5);
+      animation: fadeInDown .9s .1s ease both;
+      line-height: 1;
+      margin-left: 0;
+      display: inline-block;
+      white-space: nowrap;
+      font-variant-numeric: lining-nums tabular-nums;
+      font-feature-settings: 'lnum' 1, 'tnum' 1;
+      order: 2;
+    }
+
+    .hero-divider {
+      width: 100px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 24px auto;
+      animation: fadeIn .8s .3s both;
+    }
+
+    .hero-title {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: clamp(1rem, 2.8vw, 1.5rem);
+      color: rgba(253,246,236,.9);
+      font-weight: 700;
+      max-width: 820px;
+      margin: 0 auto 14px;
+      line-height: 1.45;
+      animation: fadeInUp .9s .25s ease both;
+      order: 4;
+    }
+
+    .hero-chapter {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: clamp(.82rem, 1.8vw, 1rem);
+      color: rgba(200,150,12,.8);
+      letter-spacing: 1.5px;
+      animation: fadeIn .8s .5s both;
+      order: 3;
+      margin-top: 6px;
+    }
+
+    .hero-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      width: 100%;
+      margin-top: 28px;
+      animation: fadeInUp .9s .35s ease both;
+      order: 5;
+    }
+
+    .hero-gallery-card {
+      position: relative;
+      min-height: 255px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #2a1208;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+      border: 1px solid rgba(200,150,12,.22);
+      transform: translateY(0);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .hero-gallery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 36px rgba(0,0,0,.28);
+    }
+
+    .hero-gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.03) contrast(1.02);
+    }
+
+    .hero-gallery-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,.7) 100%);
+      pointer-events: none;
+    }
+
+    .hero-gallery-caption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      z-index: 1;
+      color: #fff;
+      font-size: .9rem;
+      line-height: 1.35;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0,0,0,.45);
+    }
+
+    .hero-chapter {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: clamp(.82rem, 1.8vw, 1rem);
+      color: rgba(200,150,12,.8);
+      letter-spacing: 1.5px;
+      animation: fadeIn .8s .5s both;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,215,0,.6);
+      font-size: .7rem;
+      letter-spacing: 2px;
+      animation: fadeIn 1s 1s both;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes scrollPulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+
+    /* =============================================
+       #members
+    ============================================= */
+    #members { background: var(--parchment); }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+    }
+
+    .member-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 36px 24px 28px;
+      text-align: center;
+      border: 1px solid rgba(200,150,12,.2);
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .member-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--crimson), var(--gold));
+    }
+    .member-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(139,0,0,.15);
+    }
+
+    .member-avatar {
+      width: 74px; height: 74px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--crimson), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: #fff;
+      font-weight: 700;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 16px rgba(139,0,0,.25);
+    }
+
+    .member-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--crimson);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .member-id {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-lt));
+      color: var(--gold-lt);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    /* =============================================
+       #content — NỘI DUNG
+    ============================================= */
+    #content { background: var(--cream); }
+
+    /* TAB NAV */
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(139,0,0,.2);
+      margin-bottom: 36px;
+      background: var(--white);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 10px;
+      background: transparent;
+      border: none;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background .25s, color .25s;
+      border-right: 1px solid rgba(139,0,0,.1);
+      line-height: 1.3;
+      text-align: center;
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-lt));
+      color: var(--gold-lt);
+    }
+    .tab-btn:not(.active):hover { background: var(--parchment); color: var(--crimson); }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; animation: fadeInUp .45s ease both; }
+    .tab-panel.active { display: block; }
+
+    .panel-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 40px 44px;
+      border: 1px solid rgba(200,150,12,.15);
+      box-shadow: 0 4px 24px rgba(0,0,0,.05);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--parchment);
+    }
+    .panel-icon {
+      width: 54px; height: 54px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--crimson), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .panel-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--crimson);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .panel-subtitle {
+      font-size: .82rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ACCORDION inside panels */
+    .accordion { display: flex; flex-direction: column; gap: 12px; }
+
+    .acc-item {
+      border: 1px solid rgba(200,150,12,.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .acc-trigger {
+      width: 100%;
+      background: var(--parchment);
+      border: none;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--crimson);
+      text-align: left;
+      gap: 12px;
+      transition: background .2s;
+    }
+    .acc-trigger:hover { background: rgba(200,150,12,.12); }
+    .acc-trigger.open { background: linear-gradient(90deg, rgba(139,0,0,.07), rgba(200,150,12,.05)); }
+
+    .acc-arrow {
+      font-size: .8rem;
+      transition: transform .3s;
+      flex-shrink: 0;
+      color: var(--gold);
+    }
+    .acc-trigger.open .acc-arrow { transform: rotate(180deg); }
+
+    .acc-body {
+      display: none;
+      padding: 18px 20px 20px;
+      background: var(--white);
+      border-top: 1px solid rgba(200,150,12,.12);
+    }
+    .acc-body.open { display: block; animation: fadeInUp .3s ease both; }
+    .acc-body p {
+      font-size: .9rem;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .acc-body p:last-child { margin-bottom: 0; }
+
+    /* Bullet list inside acc-body */
+    .acc-body ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+    .acc-body ul li {
+      font-size: .9rem;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 6px;
+      list-style: none;
+      position: relative;
+      padding-left: 18px;
+    }
+    .acc-body ul li::before {
+      content: '◆';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: .55rem;
+      top: 6px;
+    }
+
+    /* =============================================
+       #conclusion — KẾT LUẬN / CẢM ƠN
+    ============================================= */
+    #conclusion {
+      background: linear-gradient(150deg, #0d0000 0%, #3d0000 50%, #1a0800 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #conclusion::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(200,150,12,.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(139,0,0,.3) 0%, transparent 55%);
+    }
+
+    .conclusion-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .conclusion-label {
+      font-size: .78rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .conclusion-main {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      color: var(--gold-lt);
+      font-weight: 900;
+      line-height: 1.05;
+      text-shadow: 0 0 60px rgba(200,150,12,.5);
+      margin-bottom: 10px;
+    }
+
+    .conclusion-sub {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: rgba(253,246,236,.8);
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .conclusion-divider {
+      width: 120px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 32px;
+    }
+
+    .conclusion-msg {
+      font-size: clamp(.88rem, 2vw, 1rem);
+      color: rgba(253,246,236,.7);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.75;
+    }
+
+    .conclusion-tags {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .c-tag {
+      background: rgba(200,150,12,.15);
+      border: 1px solid rgba(200,150,12,.4);
+      color: var(--gold-lt);
+      padding: 8px 22px;
+      border-radius: 30px;
+      font-size: .82rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: #080000;
+      border-top: 2px solid rgba(200,150,12,.25);
+      padding: 24px 40px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-left {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      color: var(--gold);
+      font-size: .95rem;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .footer-right {
+      font-size: .8rem;
+      color: rgba(253,246,236,.45);
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    /* =============================================
+       ANIMATIONS (keyframes)
+    ============================================= */
+    @keyframes fadeInDown {
+      from { opacity:0; transform: translateY(-22px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity:0; transform: translateY(22px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity:0; }
+      to   { opacity:1; }
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 768px) {
+      #navbar { padding: 0 20px; }
+      .nav-links { display: none; flex-direction: column; position: absolute;
+        top: 64px; left: 0; right: 0; background: rgba(139,0,0,.97);
+        padding: 16px 20px; gap: 4px; border-top: 1px solid var(--gold); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      #quick-nav { right: 10px; }
+      .qn-btn { width: 36px; height: 36px; font-size: .95rem; }
+      .panel-card { padding: 24px 20px; }
+      .tab-btn { font-size: .7rem; padding: 12px 6px; }
+      .hero-gallery { grid-template-columns: 1fr; }
+      .hero-gallery-card { min-height: 220px; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-gallery { grid-template-columns: 1fr; }
+      .hero-content { transform: translateY(-10px); }
+    }
+    /* IMAGE MODAL */
+    .img-modal {
+      position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.72); z-index: 2000; padding: 26px;
+    }
+    .img-modal.open { display: flex; }
+    .img-modal .modal-inner {
+      max-width: 1100px; width: 100%; max-height: 92vh; position: relative; border-radius: 10px; overflow: hidden;
+      background: #111;
+    }
+    .img-modal img { display: block; width: 100%; height: auto; max-height: 92vh; object-fit: contain; }
+    .img-modal .modal-close {
+      position: absolute; right: 10px; top: 10px; background: rgba(255,255,255,.08); color: #fff; border: none;
+      padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 1rem;
+    }
+    .panel-icon[role="button"] { cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- ===========================
+       NAV
+  =========================== -->
+  <nav id="navbar">
+    <a href="#home" class="nav-brand">NHÓM 5 ✦ HCM202</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home">Trang chủ</a></li>
+      <li><a href="#members">Thành viên</a></li>
+      <li><a href="#content">Nội dung</a></li>
+      <li><a href="#conclusion">Kết luận</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ===========================
+       QUICK NAV DOTS + ARROWS
+  =========================== -->
+  <div id="quick-nav">
+    <button class="qn-btn" id="qn-up" title="Phần trên">▲</button>
+    <div class="qn-dot active" data-target="home" title="Trang chủ"></div>
+    <div class="qn-dot" data-target="members" title="Thành viên"></div>
+    <div class="qn-dot" data-target="content" title="Nội dung"></div>
+    <div class="qn-dot" data-target="conclusion" title="Kết luận"></div>
+    <button class="qn-btn" id="qn-down" title="Phần dưới">▼</button>
+  </div>
+
+  <!-- ===========================
+       #home — HERO
+  =========================== -->
+  <section id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-ring"></div>
+    <div class="hero-ring"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">✦ TRƯỜNG ĐẠI HỌC FPT ✦</div>
+
+      <h1 class="hero-group">NHÓM 5</h1>
+      <p class="hero-chapter">HCM202 &nbsp;—&nbsp; IA1801</p>
+      <div class="hero-divider"></div>
+
+      <h2 class="hero-title">
+        Chương 5: Tư tưởng Hồ Chí Minh về Đại đoàn kết toàn dân tộc
+        và Đoàn kết quốc tế
+      </h2>
+
+      <div class="hero-gallery">
+        <figure class="hero-gallery-card" data-aos="fade-up" data-aos-delay="0">
+          <img src="ANH/1.jpg" alt="Ảnh tư liệu 1" fetchpriority="high" decoding="async" />
+        </figure>
+
+        <figure class="hero-gallery-card" data-aos="fade-up" data-aos-delay="80">
+          <img src="ANH/2.jpg" alt="Ảnh tư liệu 2" loading="lazy" decoding="async" />
+        </figure>
+
+        <figure class="hero-gallery-card" data-aos="fade-up" data-aos-delay="160">
+          <img src="ANH/3.jpg" alt="Ảnh tư liệu 3" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      CUỘN XUỐNG
+    </div>
+  </section>
+
+  <!-- ===========================
+       #members — THÀNH VIÊN
+  =========================== -->
+  <section id="members">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Thành viên nhóm</h2>
+      <p class="section-sub" data-aos="fade-up" data-aos-delay="80">HCM202 — IA1801 — Đại học FPT</p>
+
+      <div class="members-grid">
+
+        <!-- Thành viên 1 -->
+        <div class="member-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="member-avatar">H</div>
+          <div class="member-name">VÕ NGỌC BẢO HÀ</div>
+          <span class="member-id">SS180064</span>
+        </div>
+
+        <!-- Thành viên 2 -->
+        <div class="member-card" data-aos="fade-up" data-aos-delay="80">
+          <div class="member-avatar">Q</div>
+          <div class="member-name">THÁI NHẬT MINH QUÂN</div>
+          <span class="member-id">SS180085</span>
+        </div>
+
+        <!-- Thành viên 3 -->
+        <div class="member-card" data-aos="fade-up" data-aos-delay="160">
+          <div class="member-avatar">T</div>
+          <div class="member-name">NGUYỄN THỊ THÙY TRANG</div>
+          <span class="member-id">SS180090</span>
+        </div>
+
+        <!-- Thành viên 4 -->
+        <div class="member-card" data-aos="fade-up" data-aos-delay="240">
+          <div class="member-avatar">T</div>
+          <div class="member-name">ĐOÀN THỊ PHƯƠNG THẢO</div>
+          <span class="member-id">SS180008</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       #content — NỘI DUNG
+  =========================== -->
+  <section id="content">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Nội dung thuyết trình</h2>
+      <p class="section-sub" data-aos="fade-up" data-aos-delay="80">
+        III. Vận dụng tư tưởng Hồ Chí Minh trong giai đoạn hiện nay
+      </p>
+
+      <!-- ── TAB NAV ── -->
+      <div class="tab-nav" data-aos="fade-up" data-aos-delay="120">
+        <button class="tab-btn active" data-tab="tab1">📌 Vấn đề 1<br>Đường lối Đảng</button>
+        <button class="tab-btn" data-tab="tab2">📌 Vấn đề 2<br>Khối đoàn kết</button>
+        <button class="tab-btn" data-tab="tab3">📌 Vấn đề 3<br>Đoàn kết quốc tế</button>
+      </div>
+
+      <!-- ============================
+           TAB 1 — Đường lối Đảng
+      ============================ -->
+      <div class="tab-panel active" id="tab1" data-aos="fade-up">
+        <div class="panel-card">
+
+              <div class="panel-header">
+                <div class="panel-icon" role="button" tabindex="0" data-image="ANH/7.jpg" title="Xem ảnh tư liệu">🏛️</div>
+            <div>
+              <div class="panel-title">Quán triệt tư tưởng Hồ Chí Minh trong hoạch định đường lối Đảng</div>
+              <div class="panel-subtitle">Vấn đề 1 — Chủ trương và định hướng chiến lược</div>
+            </div>
+          </div>
+
+          <div class="accordion">
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Phát huy sức mạnh dân tộc và quốc tế
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Đảng chủ trương kết hợp sức mạnh trong nước với sự ủng hộ và hợp tác quốc tế để phát triển đất nước. Trong mọi chính sách, <strong>lợi ích dân tộc luôn được đặt lên hàng đầu.</strong></p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Chuyển mục tiêu của đoàn kết
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Trước đây, đoàn kết chủ yếu để chống giặc ngoại xâm và bảo vệ đất nước. Ngày nay, tinh thần đoàn kết được phát huy để <strong>phát triển kinh tế, xóa đói giảm nghèo</strong> và nâng cao đời sống nhân dân.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Khẳng định vai trò của đại đoàn kết
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Qua các kỳ Đại hội, đặc biệt là <strong>Đại hội XII và XIII</strong>, Đảng khẳng định đại đoàn kết toàn dân tộc là đường lối chiến lược quan trọng, là động lực lớn để xây dựng và bảo vệ Tổ quốc.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Mục tiêu chung của dân tộc
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Lấy mục tiêu xây dựng nước Việt Nam <strong>hòa bình, độc lập, giàu mạnh, dân chủ, công bằng và văn minh</strong> làm điểm chung để gắn kết mọi tầng lớp nhân dân.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================
+           TAB 2 — Khối đoàn kết
+      ============================ -->
+      <div class="tab-panel" id="tab2">
+        <div class="panel-card">
+
+          <div class="panel-header">
+            <div class="panel-icon" role="button" tabindex="0" data-image="ANH/6.jpg" title="Xem ảnh tư liệu">🤝</div>
+            <div>
+              <div class="panel-title">Xây dựng khối đại đoàn kết trên nền tảng liên minh công – nông – trí</div>
+              <div class="panel-subtitle">Vấn đề 2 — Nền tảng và giải pháp tăng cường đoàn kết</div>
+            </div>
+          </div>
+
+          <div class="accordion">
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Liên minh công – nông – trí thức là nền tảng
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Thực tế lịch sử cho thấy công nhân, nông dân và trí thức là lực lượng nòng cốt, tạo nền tảng vững chắc cho khối đại đoàn kết toàn dân tộc.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Nâng cao vai trò của Mặt trận Tổ quốc
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Cần đổi mới hoạt động của Mặt trận Tổ quốc và các đoàn thể để gắn bó chặt chẽ hơn với nhân dân, làm cầu nối giữa Đảng, Nhà nước và nhân dân.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Các giải pháp tăng cường đoàn kết
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <ul>
+                  <li><strong>Đẩy mạnh tuyên truyền:</strong> Giúp nhân dân hiểu rõ ý nghĩa và tầm quan trọng của đại đoàn kết dân tộc.</li>
+                  <li><strong>Tăng cường vai trò lãnh đạo của Đảng và quản lý của Nhà nước:</strong> Xây dựng và thực hiện các chính sách, pháp luật phù hợp để củng cố khối đoàn kết toàn dân.</li>
+                  <li><strong>Giải quyết hài hòa lợi ích:</strong> Kết hợp lợi ích cá nhân, tập thể và xã hội; tôn trọng những khác biệt không làm ảnh hưởng đến lợi ích chung.</li>
+                  <li><strong>Đấu tranh chống chia rẽ:</strong> Kiên quyết chống lại các âm mưu gây mất đoàn kết dân tộc và các quan điểm sai trái.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================
+           TAB 3 — Đoàn kết quốc tế
+      ============================ -->
+      <div class="tab-panel" id="tab3">
+        <div class="panel-card">
+
+          <div class="panel-header">
+            <div class="panel-icon" role="button" tabindex="0" data-image="ANH/5.jpg" title="Xem ảnh tư liệu">🌏</div>
+            <div>
+              <div class="panel-title">Đại đoàn kết toàn dân tộc kết hợp với đoàn kết quốc tế</div>
+              <div class="panel-subtitle">Vấn đề 3 — Hội nhập và đối ngoại trong thời kỳ mới</div>
+            </div>
+          </div>
+
+          <div class="accordion">
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Kết hợp sức mạnh dân tộc với sức mạnh thời đại
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Trong thời kỳ hội nhập quốc tế, Việt Nam cần phát huy <strong>nội lực của đất nước</strong> đồng thời tranh thủ sự hợp tác và hỗ trợ từ quốc tế.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Thực hiện đường lối đối ngoại độc lập, tự chủ
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Việt Nam theo đuổi chính sách <strong>hòa bình, hữu nghị, hợp tác và phát triển</strong>; mở rộng quan hệ với nhiều quốc gia trên thế giới.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Phương châm đối ngoại của Việt Nam
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Việt Nam khẳng định là <strong>"bạn, đối tác tin cậy và thành viên có trách nhiệm trong cộng đồng quốc tế"</strong> — đây là kim chỉ nam trong mọi hoạt động đối ngoại.</p>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                🔸 Tạo điều kiện phát triển đất nước
+                <span class="acc-arrow">▼</span>
+              </button>
+              <div class="acc-body">
+                <p>Đoàn kết quốc tế giúp Việt Nam tiếp cận <strong>nguồn vốn, công nghệ, kinh nghiệm quản lý</strong> từ bên ngoài để phát triển kinh tế, đồng thời giữ vững độc lập, chủ quyền và toàn vẹn lãnh thổ.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /container -->
+  </section>
+
+  <!-- ===========================
+       #conclusion — KẾT LUẬN
+  =========================== -->
+  <section id="conclusion">
+    <div class="conclusion-inner">
+      <p class="conclusion-label" data-aos="fade-up">✦ Kết thúc bài thuyết trình ✦</p>
+      <h2 class="conclusion-main" data-aos="fade-up" data-aos-delay="80">CẢM ƠN</h2>
+      <p class="conclusion-sub" data-aos="fade-up" data-aos-delay="140">đã lắng nghe!</p>
+      <div class="conclusion-divider" data-aos="fade-up" data-aos-delay="180"></div>
+      <p class="conclusion-msg" data-aos="fade-up" data-aos-delay="220">
+        Tư tưởng Hồ Chí Minh về đại đoàn kết toàn dân tộc và đoàn kết quốc tế
+        mãi là ngọn đuốc soi đường cho sự nghiệp xây dựng và bảo vệ Tổ quốc
+        Việt Nam xã hội chủ nghĩa.
+      </p>
+      <div class="conclusion-tags" data-aos="fade-up" data-aos-delay="280">
+        <span class="c-tag">NHÓM 5</span>
+        <span class="c-tag">HCM202</span>
+        <span class="c-tag">IA1801</span>
+        <span class="c-tag">FPT University</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       FOOTER
+  =========================== -->
+  <footer>
+    <div class="footer-left">✦ HCM202 — IA1801 — Đại học FPT</div>
+    <div class="footer-right">Nhóm 5 &copy; 2025 · Chương 5: Tư tưởng Hồ Chí Minh</div>
+  </footer>
+
+  <!-- Image modal -->
+  <div id="imgModal" class="img-modal" aria-hidden="true">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose" aria-label="Đóng">✕</button>
+      <img id="modalImg" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+  /* =============================================
+     REVEAL ON SCROLL
+  ============================================= */
+  const revealNodes = document.querySelectorAll('[data-aos]');
+  revealNodes.forEach(node => {
+    const delay = node.getAttribute('data-aos-delay');
+    if (delay) node.style.setProperty('--aos-delay', `${delay}ms`);
+  });
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('aos-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+
+    revealNodes.forEach(node => revealObserver.observe(node));
+  } else {
+    revealNodes.forEach(node => node.classList.add('aos-visible'));
+  }
+
+  /* =============================================
+     NAVBAR — scroll shadow + active link
+  ============================================= */
+  const navbar  = document.getElementById('navbar');
+  const sections = ['home','members','content','conclusion'];
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
+
+    // active nav link
+    let cur = 'home';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 100) cur = id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+    });
+
+    // quick-nav dots
+    document.querySelectorAll('.qn-dot').forEach(d => {
+      d.classList.toggle('active', d.dataset.target === cur);
+    });
+  });
+
+  /* =============================================
+     HAMBURGER MENU
+  ============================================= */
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('nav-links').classList.remove('open'));
+  });
+
+  /* =============================================
+     QUICK-NAV: dots + arrow buttons
+  ============================================= */
+  document.querySelectorAll('.qn-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const el = document.getElementById(dot.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  document.getElementById('qn-up').addEventListener('click', () => {
+    const cur = sections.find(id => {
+      const el = document.getElementById(id);
+      return el && window.scrollY >= el.offsetTop - 120;
+    }) || 'home';
+    const idx = sections.indexOf(cur);
+    const prev = sections[Math.max(0, idx - 1)];
+    document.getElementById(prev).scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('qn-down').addEventListener('click', () => {
+    const cur = [...sections].reverse().find(id => {
+      const el = document.getElementById(id);
+      return el && window.scrollY < el.offsetTop - 80;
+    });
+    if (cur) document.getElementById(cur).scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* Keyboard arrows */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      document.getElementById('qn-down').click();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      document.getElementById('qn-up').click();
+    }
+  });
+
+  /* =============================================
+     TABS
+  ============================================= */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* =============================================
+     ACCORDION
+  ============================================= */
+  function toggleAcc(trigger) {
+    const body = trigger.nextElementSibling;
+    const isOpen = trigger.classList.contains('open');
+
+    // close all in same panel
+    trigger.closest('.accordion').querySelectorAll('.acc-trigger').forEach(t => {
+      t.classList.remove('open');
+      t.nextElementSibling.classList.remove('open');
+    });
+
+    if (!isOpen) {
+      trigger.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+
+  /* =============================================
+     IMAGE MODAL HANDLERS
+  ============================================= */
+  const imgModal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalClose = document.getElementById('modalClose');
+
+  function openImage(src, alt) {
+    modalImg.src = src;
+    modalImg.alt = alt || '';
+    imgModal.classList.add('open');
+    imgModal.setAttribute('aria-hidden', 'false');
+    // disable page scroll while modal is open
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    // prevent touchmove on mobile
+    document.addEventListener('touchmove', preventDefault, { passive: false });
+  }
+  function closeImage() {
+    imgModal.classList.remove('open');
+    imgModal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+    // restore page scroll
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    document.removeEventListener('touchmove', preventDefault, { passive: false });
+  }
+
+  // attach to panel icons
+  document.querySelectorAll('.panel-icon').forEach(icon => {
+    icon.addEventListener('click', () => {
+      const src = icon.dataset.image;
+      if (src) openImage(src, icon.getAttribute('title') || 'Ảnh');
+    });
+    icon.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); icon.click(); } });
+  });
+
+  function preventDefault(e) { e.preventDefault(); }
+
+  modalClose.addEventListener('click', closeImage);
+  imgModal.addEventListener('click', e => { if (e.target === imgModal) closeImage(); });
+  </script>
+</body>
+</html>
