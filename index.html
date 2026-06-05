@@ -648,89 +648,162 @@
     }
 
     /* =============================================
-       #conclusion — KẾT LUẬN / CẢM ƠN
+       #conclusion — TRẮC NGHIỆM
     ============================================= */
     #conclusion {
-      background: linear-gradient(150deg, #0d0000 0%, #3d0000 50%, #1a0800 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--parchment);
       position: relative;
-      overflow: hidden;
     }
-
-    #conclusion::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 30% 50%, rgba(200,150,12,.12) 0%, transparent 60%),
-        radial-gradient(ellipse at 70% 50%, rgba(139,0,0,.3) 0%, transparent 55%);
+    .quiz-container {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 40px;
+      border: 1px solid rgba(200,150,12,.2);
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      max-width: 800px;
+      margin: 0 auto;
     }
-
-    .conclusion-inner {
-      position: relative;
-      z-index: 1;
+    #quiz-progress {
       text-align: center;
-      padding: 0 24px;
-    }
-
-    .conclusion-label {
-      font-size: .78rem;
-      letter-spacing: 4px;
+      font-weight: 700;
       color: var(--gold);
       margin-bottom: 20px;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
       text-transform: uppercase;
     }
-
-    .conclusion-main {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 8vw, 6rem);
-      color: var(--gold-lt);
-      font-weight: 900;
-      line-height: 1.05;
-      text-shadow: 0 0 60px rgba(200,150,12,.5);
-      margin-bottom: 10px;
+    .quiz-card-wrapper {
+      perspective: 1200px;
+      min-height: 280px;
     }
-
-    .conclusion-sub {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.2rem, 3vw, 2rem);
-      color: rgba(253,246,236,.8);
-      margin-bottom: 40px;
-      font-style: italic;
+    .quiz-card {
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      background: var(--white);
     }
-
-    .conclusion-divider {
-      width: 120px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 0 auto 32px;
+    .quiz-card.flip-out {
+      transform: rotateY(90deg);
+      opacity: 0;
     }
-
-    .conclusion-msg {
-      font-size: clamp(.88rem, 2vw, 1rem);
-      color: rgba(253,246,236,.7);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.75;
+    .quiz-card.flip-in {
+      transform: rotateY(-90deg);
+      opacity: 0;
+      transition: none;
     }
-
-    .conclusion-tags {
+    .quiz-card.flip-in-active {
+      transform: rotateY(0deg);
+      opacity: 1;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .quiz-q-title {
+      font-weight: 700;
+      color: var(--crimson);
+      margin-bottom: 16px;
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+    .quiz-options {
       display: flex;
+      flex-direction: column;
       gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
     }
-    .c-tag {
-      background: rgba(200,150,12,.15);
-      border: 1px solid rgba(200,150,12,.4);
+    .quiz-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: var(--cream);
+      border: 2px solid rgba(200,150,12,.15);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+      font-size: 1rem;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .quiz-label:hover {
+      background: rgba(200,150,12,.1);
+      transform: translateX(4px);
+    }
+    .quiz-label.correct {
+      background: #e6f4ea;
+      border-color: #34a853;
+      color: #137333;
+    }
+    .quiz-label.wrong {
+      background: #fce8e6;
+      border-color: #ea4335;
+      color: #c5221f;
+      animation: shake 0.4s ease;
+    }
+    .quiz-label.locked {
+      pointer-events: none;
+    }
+    .quiz-option-text {
+      pointer-events: none;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .quiz-actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .quiz-btn {
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-lt));
       color: var(--gold-lt);
-      padding: 8px 22px;
-      border-radius: 30px;
-      font-size: .82rem;
-      letter-spacing: 1px;
+      border: none;
+      padding: 12px 32px;
+      font-size: 1rem;
+      font-family: 'Be Vietnam Pro', sans-serif;
       font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      letter-spacing: 1px;
+    }
+    .quiz-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139,0,0,.3);
+    }
+    .quiz-result {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .quiz-result-board {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, rgba(255,215,0,.15), rgba(139,0,0,.05));
+      border: 2px dashed var(--gold);
+      border-radius: 14px;
+      animation: fadeInDown 0.6s ease both;
+    }
+    .result-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: bounce 1s infinite alternate ease-in-out;
+    }
+    .result-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--crimson);
+      margin-bottom: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 4px rgba(200,150,12,.3);
+    }
+    .result-desc {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-15px); }
     }
 
     /* =============================================
@@ -830,7 +903,7 @@
       <li><a href="#home">Trang chủ</a></li>
       <li><a href="#members">Thành viên</a></li>
       <li><a href="#content">Nội dung</a></li>
-      <li><a href="#conclusion">Kết luận</a></li>
+      <li><a href="#conclusion">Ôn tập</a></li>
     </ul>
     <div class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -845,7 +918,7 @@
     <div class="qn-dot active" data-target="home" title="Trang chủ"></div>
     <div class="qn-dot" data-target="members" title="Thành viên"></div>
     <div class="qn-dot" data-target="content" title="Nội dung"></div>
-    <div class="qn-dot" data-target="conclusion" title="Kết luận"></div>
+    <div class="qn-dot" data-target="conclusion" title="Ôn tập"></div>
     <button class="qn-btn" id="qn-down" title="Phần dưới">▼</button>
   </div>
 
@@ -1128,24 +1201,22 @@
   </section>
 
   <!-- ===========================
-       #conclusion — KẾT LUẬN
+       #conclusion — ÔN TẬP
   =========================== -->
   <section id="conclusion">
-    <div class="conclusion-inner">
-      <p class="conclusion-label" data-aos="fade-up">✦ Kết thúc bài thuyết trình ✦</p>
-      <h2 class="conclusion-main" data-aos="fade-up" data-aos-delay="80">CẢM ƠN</h2>
-      <p class="conclusion-sub" data-aos="fade-up" data-aos-delay="140">đã lắng nghe!</p>
-      <div class="conclusion-divider" data-aos="fade-up" data-aos-delay="180"></div>
-      <p class="conclusion-msg" data-aos="fade-up" data-aos-delay="220">
-        Tư tưởng Hồ Chí Minh về đại đoàn kết toàn dân tộc và đoàn kết quốc tế
-        mãi là ngọn đuốc soi đường cho sự nghiệp xây dựng và bảo vệ Tổ quốc
-        Việt Nam xã hội chủ nghĩa.
-      </p>
-      <div class="conclusion-tags" data-aos="fade-up" data-aos-delay="280">
-        <span class="c-tag">NHÓM 5</span>
-        <span class="c-tag">HCM202</span>
-        <span class="c-tag">IA1801</span>
-        <span class="c-tag">FPT University</span>
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Củng cố kiến thức</h2>
+      <p class="section-sub" data-aos="fade-up" data-aos-delay="80">Trắc nghiệm 15 câu củng cố nội dung bài học</p>
+
+      <div class="quiz-container" data-aos="fade-up" data-aos-delay="120">
+        <div id="quiz-progress">Câu 1 / 15</div>
+        <div class="quiz-card-wrapper">
+          <div id="quiz-card" class="quiz-card"></div>
+        </div>
+        <div class="quiz-result" id="quiz-result" style="display: none;"></div>
+        <div class="quiz-actions" id="quiz-actions" style="display: none;">
+          <button id="btn-retry-quiz" class="quiz-btn">Làm lại</button>
+        </div>
       </div>
     </div>
   </section>
@@ -1337,6 +1408,207 @@
 
   modalClose.addEventListener('click', closeImage);
   imgModal.addEventListener('click', e => { if (e.target === imgModal) closeImage(); });
+
+  /* =============================================
+     QUIZ LOGIC
+  ============================================= */
+  const allQuestions = [
+    {
+      q: "Theo tư tưởng Hồ Chí Minh được vận dụng trong giai đoạn hiện nay, nền tảng của khối đại đoàn kết toàn dân tộc là gì?",
+      options: ["A. Liên minh công – nông – trí dưới sự lãnh đạo của Đảng", "B. Liên minh giữa giai cấp công nhân và giai cấp tư sản dân tộc", "C. Liên minh giữa các tầng lớp nhân dân không phân biệt thành phần", "D. Liên minh giữa Đảng, Nhà nước và lực lượng vũ trang"],
+      answer: 0
+    },
+    {
+      q: "Mục tiêu cách mạng trong giai đoạn hiện nay mà đại đoàn kết toàn dân tộc hướng tới là:",
+      options: ["A. Giành độc lập dân tộc và thống nhất đất nước", "B. Dân giàu, nước mạnh, dân chủ, xã hội công bằng văn minh", "C. Xây dựng chủ nghĩa xã hội và bảo vệ Tổ quốc", "D. Phát triển kinh tế thị trường định hướng xã hội chủ nghĩa"],
+      answer: 1
+    },
+    {
+      q: "Trong việc hoạch định chủ trương, đường lối, Đảng Cộng sản Việt Nam quán triệt tư tưởng đại đoàn kết Hồ Chí Minh theo nguyên tắc nào sau đây?",
+      options: ["A. Đoàn kết trên cơ sở thống nhất về lợi ích kinh tế trước hết", "B. Đoàn kết rộng rãi, lâu dài, chặt chẽ, có nguyên tắc", "C. Đoàn kết theo từng giai đoạn cách mạng cụ thể, linh hoạt", "D. Đoàn kết chỉ trong nội bộ giai cấp công nhân và nông dân"],
+      answer: 1
+    },
+    {
+      q: "Việt Nam bắt đầu tham gia lực lượng gìn giữ hòa bình Liên hợp quốc vào năm nào?",
+      options: ["A. 2010", "B. 2012", "C. 2014", "D. 2016"],
+      answer: 2
+    },
+    {
+      q: "Bài học kinh nghiệm thứ nhất rút ra từ chiến lược đoàn kết quốc tế của Hồ Chí Minh trong giai đoạn hiện nay là:",
+      options: ["A. Mở cửa, hội nhập quốc tế, là bạn của tất cả các nước", "B. Làm rõ mục tiêu đoàn kết: dân giàu, nước mạnh, dân chủ, công bằng, văn minh", "C. Nêu cao tinh thần độc lập tự chủ, tự lực tự cường", "D. Xây dựng Đảng trong sạch, vững mạnh làm hạt nhân đoàn kết"],
+      answer: 1
+    },
+    {
+      q: "Theo bài học kinh nghiệm thứ hai trong chiến lược đoàn kết quốc tế của Hồ Chí Minh, Việt Nam cần:",
+      options: ["A. Chỉ quan hệ với các nước xã hội chủ nghĩa anh em", "B. Mở cửa, hội nhập, là bạn của tất cả các nước và tham gia giải quyết các vấn đề toàn cầu", "C. Ưu tiên quan hệ với các nước láng giềng trong khu vực ASEAN", "D. Tranh thủ sự ủng hộ của các nước lớn để phát triển kinh tế"],
+      answer: 1
+    },
+    {
+      q: "Nội dung \"kết hợp sức mạnh dân tộc với sức mạnh thời đại\" thuộc bài học kinh nghiệm thứ mấy trong chiến lược đoàn kết quốc tế của Hồ Chí Minh?",
+      options: ["A. Bài học thứ nhất", "B. Bài học thứ hai", "C. Bài học thứ ba", "D. Bài học thứ tư"],
+      answer: 2
+    },
+    {
+      q: "Theo tư tưởng Hồ Chí Minh, vai trò của Đảng Cộng sản Việt Nam trong khối đại đoàn kết toàn dân tộc là:",
+      options: ["A. Người đại diện cho lợi ích của giai cấp công nhân", "B. Hạt nhân lãnh đạo khối đại đoàn kết toàn dân tộc và đoàn kết quốc tế", "C. Tổ chức chính trị duy nhất được phép lãnh đạo Mặt trận", "D. Lực lượng trung gian điều phối các thành phần trong xã hội"],
+      answer: 1
+    },
+    {
+      q: "Trong giai đoạn cách mạng hiện nay, cách mạng Việt Nam được xác định là:",
+      options: ["A. Một cuộc cách mạng độc lập, tách biệt với phong trào thế giới", "B. Một bộ phận không thể tách rời của cách mạng thế giới", "C. Một mô hình riêng, không theo xu thế chung của thời đại", "D. Trọng tâm của phong trào cộng sản và công nhân quốc tế"],
+      answer: 1
+    },
+    {
+      q: "Bài học thứ tư trong chiến lược đoàn kết quốc tế của Hồ Chí Minh yêu cầu:",
+      options: ["A. Tăng cường mở rộng quan hệ ngoại giao với mọi quốc gia", "B. Xây dựng Đảng trong sạch, vững mạnh, nâng cao năng lực lãnh đạo ngang tầm nhiệm vụ dân tộc và thời đại", "C. Phát triển kinh tế để tạo sức mạnh vật chất cho đoàn kết quốc tế", "D. Củng cố lực lượng quốc phòng để bảo vệ thành quả đoàn kết"],
+      answer: 1
+    },
+    {
+      q: "Tư tưởng Hồ Chí Minh về đoàn kết, hợp tác quốc tế tiếp tục được thể hiện trong:",
+      options: ["A. Chính sách đối ngoại độc lập, không liên kết của Việt Nam", "B. Mọi chủ trương, chính sách đối ngoại của Đảng và Nhà nước Việt Nam", "C. Các hiệp ước quốc phòng song phương với các nước lớn", "D. Quan hệ ngoại giao chỉ với các nước đang phát triển"],
+      answer: 1
+    },
+    {
+      q: "Theo tư tưởng Hồ Chí Minh, đoàn kết quốc tế trong giai đoạn hiện nay hướng đến những mục tiêu nào?",
+      options: ["A. Hòa bình, độc lập dân tộc, dân chủ và tiến bộ xã hội", "B. Tăng trưởng kinh tế, xóa đói giảm nghèo và công nghiệp hóa", "C. Hội nhập kinh tế quốc tế và thu hút đầu tư nước ngoài", "D. Bảo vệ chủ quyền lãnh thổ và chống chủ nghĩa bá quyền"],
+      answer: 0
+    },
+    {
+      q: "Để công nghiệp hóa, hiện đại hóa đất nước theo tư tưởng Hồ Chí Minh, Việt Nam cần:",
+      options: ["A. Tập trung khai thác nội lực, hạn chế phụ thuộc nước ngoài", "B. Kết hợp sức mạnh trong nước và sức mạnh quốc tế trên nền tảng độc lập tự chủ", "C. Ưu tiên tiếp nhận vốn và công nghệ từ các nước phát triển", "D. Thực hiện mô hình kinh tế kế hoạch hóa tập trung hiện đại"],
+      answer: 1
+    },
+    {
+      q: "Tư tưởng đoàn kết, hợp tác quốc tế của Hồ Chí Minh có ý nghĩa như thế nào trong bối cảnh quan hệ quốc tế hiện đại đã thay đổi căn bản?",
+      options: ["A. Đã hoàn thành sứ mệnh lịch sử, cần thay thế bằng tư tưởng mới", "B. Vẫn giữ nguyên giá trị thời sự, tiếp tục là nền tảng cho hội nhập quốc tế hiệu quả", "C. Chỉ còn mang ý nghĩa lý luận, ít ứng dụng trong thực tiễn ngoại giao", "D. Được điều chỉnh hoàn toàn cho phù hợp với bối cảnh toàn cầu hóa"],
+      answer: 1
+    },
+    {
+      q: "Việc Đảng Cộng sản Việt Nam \"tiếp tục đổi mới và chỉnh đốn Đảng\" gắn với yêu cầu nào trong tư tưởng đoàn kết của Hồ Chí Minh?",
+      options: ["A. Nâng cao năng lực lãnh đạo kinh tế của Đảng trong thời kỳ hội nhập", "B. Xây dựng Đảng xứng đáng là hạt nhân đoàn kết, ngang tầm nhiệm vụ của dân tộc và thời đại", "C. Mở rộng dân chủ nội bộ Đảng để thu hút nhân tài", "D. Tăng cường vai trò giám sát của nhân dân đối với Đảng"],
+      answer: 1
+    }
+  ];
+
+  let currentQuiz = [];
+  let currentQuestionIndex = 0;
+
+  function initQuiz() {
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    currentQuiz = shuffled.slice(0, 15);
+    currentQuestionIndex = 0;
+    
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('quiz-result').innerHTML = '';
+    document.getElementById('quiz-actions').style.display = 'none';
+    document.getElementById('quiz-progress').style.display = 'block';
+    
+    renderQuestion(currentQuestionIndex);
+  }
+
+  function renderQuestion(index) {
+    const quizCard = document.getElementById('quiz-card');
+    document.getElementById('quiz-progress').innerText = `Câu ${index + 1} / 15`;
+    
+    const item = currentQuiz[index];
+    quizCard.innerHTML = '';
+    
+    const title = document.createElement('div');
+    title.className = 'quiz-q-title';
+    title.innerText = item.q;
+    quizCard.appendChild(title);
+    
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'quiz-options';
+    
+    item.options.forEach((opt, oIndex) => {
+      const label = document.createElement('div');
+      label.className = 'quiz-label';
+      label.dataset.index = oIndex;
+      
+      const text = document.createElement('span');
+      text.className = 'quiz-option-text';
+      text.innerText = opt;
+      
+      label.appendChild(text);
+      
+      label.addEventListener('click', function() {
+        handleOptionClick(this, oIndex, item.answer);
+      });
+      
+      optionsDiv.appendChild(label);
+    });
+    
+    quizCard.appendChild(optionsDiv);
+  }
+
+  function handleOptionClick(element, selectedIndex, correctIndex) {
+    const parent = element.parentElement;
+    // Ngăn chặn bấm nhiều lần hoặc sau khi đã chọn đúng
+    if (parent.classList.contains('locked')) return;
+    
+    if (selectedIndex === correctIndex) {
+      parent.classList.add('locked');
+      element.classList.add('correct');
+      
+      // Chờ 1 chút để thấy đáp án đúng, sau đó lật sang câu tiếp theo
+      setTimeout(() => {
+        flipToNext();
+      }, 700);
+    } else {
+      element.classList.add('wrong');
+      // Lắc một cái rồi bỏ màu đỏ để chọn lại
+      setTimeout(() => {
+        element.classList.remove('wrong');
+      }, 500);
+    }
+  }
+
+  function flipToNext() {
+    const quizCard = document.getElementById('quiz-card');
+    quizCard.classList.add('flip-out');
+    
+    setTimeout(() => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < currentQuiz.length) {
+        renderQuestion(currentQuestionIndex);
+        quizCard.classList.remove('flip-out');
+        quizCard.classList.add('flip-in');
+        
+        // Trigger reflow
+        void quizCard.offsetWidth;
+        
+        quizCard.classList.add('flip-in-active');
+        
+        setTimeout(() => {
+          quizCard.classList.remove('flip-in');
+          quizCard.classList.remove('flip-in-active');
+        }, 400);
+      } else {
+        // Hoàn thành
+        document.getElementById('quiz-progress').style.display = 'none';
+        quizCard.innerHTML = '';
+        document.getElementById('quiz-result').innerHTML = `
+          <div class="quiz-result-board">
+            <div class="result-icon">🎉</div>
+            <div class="result-title">Xuất Sắc!</div>
+            <div class="result-desc">Chúc mừng bạn đã hoàn thành xuất sắc toàn bộ 15 câu hỏi ôn tập.<br/>Kiến thức của bạn về tư tưởng Hồ Chí Minh rất vững vàng!</div>
+          </div>
+        `;
+        document.getElementById('quiz-result').style.display = 'block';
+        document.getElementById('quiz-actions').style.display = 'block';
+        quizCard.classList.remove('flip-out');
+      }
+    }, 400);
+  }
+
+  document.getElementById('btn-retry-quiz').addEventListener('click', () => {
+    const quizCard = document.getElementById('quiz-card');
+    quizCard.classList.remove('flip-out', 'flip-in', 'flip-in-active');
+    initQuiz();
+  });
+
+  initQuiz();
   </script>
 </body>
 </html>
